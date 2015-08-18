@@ -1,10 +1,14 @@
-//
+/**
+ * Copyright (c) 2014-2015, RongCloud.
+ * All rights reserved.
+ *
+ * All the contents are the copyright of RongCloud Network Technology Co.Ltd.
+ * Unless otherwise credited. http://rongcloud.cn
+ *
+ */
+
 //  RongIMLib.h
-//  RongIMLib
-//
 //  Created by xugang on 14/12/11.
-//  Copyright (c) 2014年 RongCloud. All rights reserved.
-//
 
 #import <UIKit/UIKit.h>
 
@@ -14,7 +18,8 @@ FOUNDATION_EXPORT double RongIMLibVersionNumber;
 //! Project version string for RongIMLib.
 FOUNDATION_EXPORT const unsigned char RongIMLibVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <RongIMLib/PublicHeader.h>
+// In this header, you should import all the public headers of your framework
+// using statements like #import <RongIMLib/PublicHeader.h>
 
 #import <RongIMLib/RCIMClient.h>
 #import <RongIMLib/RCMessageContent.h>
@@ -23,7 +28,7 @@ FOUNDATION_EXPORT const unsigned char RongIMLibVersionString[];
 //#import <RongIMLib/RCNotificationMessage.h>
 #import <RongIMLib/interf_dec.h>
 #import <RongIMLib/RCUserInfo.h>
-#import <RongIMLib/RCPublicServiceInfo.h>
+#import <RongIMLib/RCPublicServiceProfile.h>
 #import <RongIMLib/RCImageMessage.h>
 #import <RongIMLib/RCVoiceMessage.h>
 #import <RongIMLib/RCStatusDefine.h>
@@ -50,6 +55,16 @@ FOUNDATION_EXPORT const unsigned char RongIMLibVersionString[];
 #import <RongIMLib/RCPublicServiceMenu.h>
 #import <RongIMLib/RCPublicServiceMultiRichContentMessage.h>
 #import <RongIMLib/RCPublicServiceRichContentMessage.h>
-#import <RongIMLib/RCWKNotifier.h>
-
-
+#import <RongIMLib/RCPublicServiceCommondMessage.h>
+#import <RongIMLib/RCMessageContentView.h>
+#import <RongIMLib/RCHandShakeMessage.h>
+#import <RongIMLib/RCSuspendMessage.h>
+#import <RongIMLib/RCPersonalInfo.h>
+#import <RongIMLib/RCAccountInfo.h>
+#import <RongIMLib/RCContactInfo.h>
+#import <RongIMLib/RCClientInfo.h>
+#import <RongIMLib/RCUserData.h>
+#import <RongIMLib/RCWatchKitStatusDelegate.h>
+#import <RongIMLib/RCRealTimeLocationManager.h>
+#import <RongIMLib/RCRealTimeLocationStartMessage.h>
+#import <RongIMLib/RCRealTimeLocationEndMessage.h>

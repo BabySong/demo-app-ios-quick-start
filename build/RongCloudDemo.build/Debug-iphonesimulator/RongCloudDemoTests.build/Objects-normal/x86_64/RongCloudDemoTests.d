@@ -1,5 +1,5 @@
 dependencies: \
-  /Users/dulizhao/Desktop/work/RongCloudDemo/RongCloudDemo/RongCloudDemoTests/RongCloudDemoTests.m \
+  /Users/dulizhao/GitHub/demo-app-ios-quick-start/demo-app-ios-quick-start/RongCloudDemoTests/RongCloudDemoTests.m \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework/Headers/XCTestSuiteRun.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework/Headers/XCTestSuite.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Frameworks/XCTest.framework/Headers/XCTestProbe.h \

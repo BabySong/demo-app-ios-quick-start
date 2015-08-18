@@ -8,13 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-
 @class RCEmojiPageControl;
 @class RCEmojiBoardView;
 /**
  *  RCEmojiViewDelegate
  */
-@protocol RCEmojiViewDelegate<NSObject>
+@protocol RCEmojiViewDelegate <NSObject>
 @optional
 /**
  *  didTouchEmojiView
@@ -22,37 +21,36 @@
  *  @param emojiView emojiView
  *  @param string    string
  */
-- (void)didTouchEmojiView:(RCEmojiBoardView*)emojiView touchedEmoji:(NSString*)string;
+- (void)didTouchEmojiView:(RCEmojiBoardView *)emojiView touchedEmoji:(NSString *)string;
 /**
  *  didSendButtonEvent
  *
- *  @param emojiView emojiView
- *  @param sendBtn   sendBtn 
+ *  @param emojiView  emojiView
+ *  @param sendButton send button
  */
-- (void)didSendButtonEvent:(RCEmojiBoardView*)emojiView sendBtn:(UIButton*)sendBtn;
+- (void)didSendButtonEvent:(RCEmojiBoardView *)emojiView sendButton:(UIButton *)sendButton;
 @end
 /**
  *  RCEmojiBoardView
  */
-@interface RCEmojiBoardView : UIView<UIScrollViewDelegate>
-{
+@interface RCEmojiBoardView : UIView <UIScrollViewDelegate> {
     /**
      *  RCEmojiPageControl
      */
-    RCEmojiPageControl* pageCtrl;
+    RCEmojiPageControl *pageCtrl;
     /**
      *  currentIndex
      */
     NSInteger currentIndex;
 }
 /**
- *  emojiBgView
+ *  emojiBackgroundView
  */
-@property(nonatomic, strong) UIScrollView* emojiBgView;
+@property(nonatomic, strong) UIScrollView *emojiBackgroundView;
 /**
  *  emojiLabel
  */
-@property(nonatomic, strong) UILabel* emojiLabel;
+@property(nonatomic, strong) UILabel *emojiLabel;
 /**
  *  RCEmojiViewDelegate
  */
@@ -60,5 +58,5 @@
 /**
  *  loadLableView
  */
--(void)loadLableView;
+- (void)loadLableView;
 @end

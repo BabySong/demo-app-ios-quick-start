@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <RongIMKit/RongIMKit.h>
 
-@interface ViewController : UIViewController<RCIMUserInfoFetcherDelegagte>
+@interface ViewController : UIViewController<RCIMUserInfoDataSource>
 
 
 @end

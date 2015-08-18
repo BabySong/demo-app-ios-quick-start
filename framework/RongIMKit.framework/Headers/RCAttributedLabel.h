@@ -7,6 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+
+
+
 /**
  *  RCAttributedLabelClickedTextInfo
  */
@@ -14,11 +17,11 @@
 /**
  *  NSTextCheckingType
  */
-@property (nonatomic, assign) NSTextCheckingType textCheckingType;
+@property(nonatomic, assign) NSTextCheckingType textCheckingType;
 /**
  *  text
  */
-@property (nonatomic, strong) NSString *text;
+@property(nonatomic, strong) NSString *text;
 
 @end
 /**
@@ -32,7 +35,7 @@
  *
  *  @return return NSDictionary
  */
-- (NSDictionary*)attributeDictionaryForTextType:(NSTextCheckingTypes)textType;
+- (NSDictionary *)attributeDictionaryForTextType:(NSTextCheckingTypes)textType;
 /**
  *  highlightedAttributeDictionaryForTextType
  *
@@ -40,25 +43,51 @@
  *
  *  @return NSDictionary
  */
-- (NSDictionary*)highlightedAttributeDictionaryForTextType:(NSTextCheckingType)textType;
+- (NSDictionary *)highlightedAttributeDictionaryForTextType:(NSTextCheckingType)textType;
 
+@end
+
+
+@protocol RCAttributedLabelDelegate;
+
+/**
+ *  Override UILabel @property to accept both NSString and NSAttributedString
+ */
+@protocol RCAttributedLabel <NSObject>
+
+/**
+ *  text
+ */
+@property (nonatomic, copy) id text;
 @end
 /**
  *  RCAttributedLabel
  */
-@interface RCAttributedLabel : UILabel <RCAttributedDataSource>
-/** 可以通过设置attributeDataSource或者attributeDictionary、highlightedAttributeDictionary来自定义不同文本的字体颜色 */
-@property (nonatomic, strong) id<RCAttributedDataSource> attributeDataSource;
+@interface RCAttributedLabel : UILabel <RCAttributedDataSource,UIGestureRecognizerDelegate>
+/**
+ * 可以通过设置attributeDataSource或者attributeDictionary、highlightedAttributeDictionary来自定义不同文本的字体颜色
+ */
+@property(nonatomic, strong) id<RCAttributedDataSource> attributeDataSource;
+/**
+ * 设置点击事件，比如打开超链接等等
+ */
+@property (nonatomic, assign) id <RCAttributedLabelDelegate> delegate;
 /**
  *  attributeDictionary
  */
-@property (nonatomic, strong) NSDictionary *attributeDictionary;
+@property(nonatomic, strong) NSDictionary *attributeDictionary;
 /**
  *  highlightedAttributeDictionary
  */
-@property (nonatomic, strong) NSDictionary *highlightedAttributeDictionary;
-/** 设置高亮显示哪些类型的文本 NSTextCheckingTypeLink | NSTextCheckingTypePhoneNumber */
-@property (nonatomic, assign) NSTextCheckingTypes textCheckingTypes;
+@property(nonatomic, strong) NSDictionary *highlightedAttributeDictionary;
+/**
+ *  NSTextCheckingTypes 格式类型
+ */
+@property(nonatomic, assign) NSTextCheckingTypes textCheckingTypes;
+/**
+ *  NSTextCheckingTypes current格式类型
+ */
+@property(nonatomic, readonly, assign) NSTextCheckingType currentTextCheckingType;
 /**
  *  setTextdataDetectorEnabled
  *
@@ -73,7 +102,7 @@
  *
  *  @return RCAttributedLabelClickedTextInfo
  */
-- (RCAttributedLabelClickedTextInfo*)textInfoAtPoint:(CGPoint)point;
+- (RCAttributedLabelClickedTextInfo *)textInfoAtPoint:(CGPoint)point;
 /**
  *  setTextHighlighted
  *
@@ -83,3 +112,39 @@
 - (void)setTextHighlighted:(BOOL)highlighted atPoint:(CGPoint)point;
 
 @end
+
+
+/**
+ *  RCAttributedLabelDelegate
+ */
+@protocol RCAttributedLabelDelegate <NSObject>
+
+///-----------------------------------
+/// @name Responding to Link Selection
+///-----------------------------------
+@optional
+
+/**
+ *  打开超链接
+ *  @param label The label whose link was selected.
+ *  @param url The URL for the selected link.
+ */
+- (void)attributedLabel:(RCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url;
+
+/**
+ *  打开电话类型
+ *  @param label The label whose link was selected.
+ *  @param phoneNumber The phone number for the selected link.
+ */
+- (void)attributedLabel:(RCAttributedLabel *)label didSelectLinkWithPhoneNumber:(NSString *)phoneNumber;
+
+/**
+ *  响应点击事件
+ *  @param label The label whose link was selected.
+ *  @param content content.
+ */
+- (void)attributedLabel:(RCAttributedLabel *)label didTapLabel:(NSString *)content;
+
+
+@end
+

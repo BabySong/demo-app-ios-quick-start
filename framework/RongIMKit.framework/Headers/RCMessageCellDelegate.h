@@ -9,35 +9,64 @@
 #ifndef RongIMKit_RCMessageCellDelegate_h
 #define RongIMKit_RCMessageCellDelegate_h
 
+/**
+ *  消息Cell事件回调
+ */
 @protocol RCMessageCellDelegate <NSObject>
 
-@optional;
+@optional
+;
 /**
  *  点击消息内容
  *
  *  @param model 数据
  */
-- (void) didTapMessageCell:(RCMessageModel *)model;
+- (void)didTapMessageCell:(RCMessageModel *)model;
+
+/**
+ *  点击消息内容中的链接，此事件不会再触发didTapMessageCell
+ *
+ *  @param url   Url String
+ *  @param model 数据
+ */
+- (void)didTapUrlInMessageCell:(NSString *)url model:(RCMessageModel *)model;
+
+/**
+ *  点击消息内容中的电话号码，此事件不会再触发didTapMessageCell
+ *
+ *  @param phoneNumber Phone number
+ *  @param model       数据
+ */
+- (void)didTapPhoneNumberInMessageCell:(NSString *) phoneNumber model:(RCMessageModel *)model;
 
 /**
  *  点击头像事件
  *
  *  @param userId 用户的ID
  */
-- (void) didTapCellPortrait:(NSString*)userId;
+- (void)didTapCellPortrait:(NSString *)userId;
+
+/**
+ *  长按头像事件
+ *
+ *  @param userId 用户的ID
+ */
+- (void)didLongPressCellPortrait:(NSString *)userId;
 
 /**
  *  长按消息内容
  *
  *  @param model 数据
+ *  @param view 视图
  */
-- (void) didLongTouchMessageCell:(RCMessageModel*)model inView:(UIView*)view;
-
+- (void)didLongTouchMessageCell:(RCMessageModel *)model inView:(UIView *)view;
 
 /**
- *  for resending message
+ * 点击消息发送失败视图事件
+ *
+ *  @param model 消息数据模型
  */
-- (void) didTapmsgFailedStatusViewForResend:(RCMessageModel *)model;
+- (void)didTapmessageFailedStatusViewForResend:(RCMessageModel *)model;
 @end
 
 #endif

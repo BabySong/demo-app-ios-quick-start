@@ -1,25 +1,40 @@
-//
-//  RCPublicServiceMenu.h
-//  RongIMLib
-//
-//  Created by litao on 15/4/14.
-//  Copyright (c) 2015年 RongCloud. All rights reserved.
-//
-
-
-/* Menu -> MenuGroup -> MenuItem
- *                   -> MenuItem
+/**
+ * Copyright (c) 2014-2015, RongCloud.
+ * All rights reserved.
  *
- *         MenuGroup -> MenuItem
- *                   -> MenuItem
- *                   -> MenuItem
+ * All the contents are the copyright of RongCloud Network Technology Co.Ltd.
+ * Unless otherwise credited. http://rongcloud.cn
+ *
+ */
+
+//  RCPublicServiceMenu.h
+//  Created by litao on 15/4/14.
+
+/* Menu -> MenuItem
+ *
+ *         MenuItem  -> MenuItem
+ *                      MenuItem
+ *
+ *         MenuItem  -> MenuItem
+ *                      MenuItem
+ *                      MenuItem
  */
 #import <Foundation/Foundation.h>
-#import "RCPublicServiceMenuGroup.h"
 #import "RCPublicServiceMenuItem.h"
 
+/**
+ * 公众服务账号菜单类
+ */
 @interface RCPublicServiceMenu : NSObject
-@property (nonatomic, strong)NSString *title;
-@property (nonatomic, strong)NSArray *menuGroups; //of RCPublicServiceMenuGroup
-- (void)decodeWithData:(NSData *)data;
+
+/**
+ * 菜单项Array
+ * 类型为RCPublicServiceMenuItem
+ */
+@property(nonatomic, strong) NSArray *menuItems;
+/**
+ * 根据JSON 字典初始化Menu
+ * @param  jsonDictionary    存储菜单属性的字典
+ */
+- (void)decodeWithJsonDictionaryArray:(NSArray *)jsonDictionary;
 @end

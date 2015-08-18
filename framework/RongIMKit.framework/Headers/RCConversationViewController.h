@@ -18,6 +18,13 @@
 @class RCMessageBaseCell;
 @class RCMessageModel;
 
+#define PLUGIN_BOARD_ITEM_ALBUM_TAG    1001
+#define PLUGIN_BOARD_ITEM_CAMERA_TAG   1002
+#define PLUGIN_BOARD_ITEM_LOCATION_TAG 1003
+#if RC_VOIP_ENABLE
+#define PLUGIN_BOARD_ITEM_VOIP_TAG     1004
+#endif
+
 /**
  *  RCConversationViewController
  */
@@ -25,43 +32,91 @@
 /**
  *  targetId
  */
-@property (nonatomic,strong) NSString *targetId;
+@property(nonatomic, strong) NSString *targetId;
 /**
  *  targetName
  */
-@property (nonatomic,strong) NSString *targetName;
+@property(nonatomic, strong) NSString *userName;
+/**
+ *  unReadMessage
+ */
+@property(nonatomic, assign) NSInteger unReadMessage;
+/**
+ *  新消息提示条，未读消息上限150条
+ */
+@property(nonatomic, strong) UIButton *unReadButton;
 /**
  *  conversationType
  */
-@property (nonatomic) RCConversationType conversationType;
-/**
- *  sendingCount
- */
-@property (nonatomic,readonly) NSInteger sendingCount;
+@property(nonatomic) RCConversationType conversationType;
 /**
  *  conversationMessageCollectionView
  */
-@property (nonatomic,strong) UICollectionView *conversationMessageCollectionView;
+@property(nonatomic, strong) UICollectionView *conversationMessageCollectionView;
 /**
  *  conversationDataRepository
  */
-@property (nonatomic,strong) NSMutableArray *conversationDataRepository;
+@property(nonatomic, strong) NSMutableArray *conversationDataRepository;
 /**
  *  UICollectionViewFlowLayout
  */
-@property (nonatomic, strong) UICollectionViewFlowLayout *customFlowLayout;
+@property(nonatomic, strong) UICollectionViewFlowLayout *customFlowLayout;
 /**
  *  输入工具栏
  */
-@property (nonatomic, strong) RCChatSessionInputBarControl *chatSessionInputBarControl;
+@property(nonatomic, strong) RCChatSessionInputBarControl *chatSessionInputBarControl;
 /**
  *  功能板
  */
-@property (nonatomic, strong) RCPluginBoardView *pluginBoardView;
+@property(nonatomic, strong) RCPluginBoardView *pluginBoardView;
 /**
  *  emoji
  */
-@property (nonatomic, strong) RCEmojiBoardView *emojiBoardView;
+@property(nonatomic, strong) RCEmojiBoardView *emojiBoardView;
+
+/**
+ *  new msg label
+ */
+@property(nonatomic, strong) UILabel *unReadNewMessageLabel;
+
+/**
+ *  默认No，如果Yes，开启右上角和右下角未读个数icon。
+ */
+@property(nonatomic, assign) BOOL enableUnreadMessageIcon;
+
+/**
+ *  默认No,如果Yes, 当消息不在最下方时显示 右下角新消息数图标
+ */
+@property(nonatomic, assign) BOOL enableNewComingMessageIcon;
+
+/**
+ * 是否允许保存新拍照片到本地系统
+ */
+@property(nonatomic, assign) BOOL enableSaveNewPhotoToLocalSystem;
+
+/**
+ * 用于查询会话列表未读消息数目显示在返回按钮之上。调用notifyUpdateUnreadMessageCount更新返回图标和设置Target
+ * 设置了此值需要在继承会话VC，并重写leftBarButtonItemPressed函数，参考demo中RCDChatViewController
+ * 值为想要统计未读数的会话类型Array。
+ */
+@property(nonatomic, strong) NSArray *displayConversationTypeArray;
+
+/**
+ * 是否显示发送者的名字，YES显示，NO不显示，默认是YES。
+ * 有些场景可能用得到，比如单聊时，不需要显示发送者的名字。
+ */
+@property(nonatomic) BOOL displayUserNameInCell;
+
+/**
+ * 默认输入框类型，值为文本或者语言，默认为文本。
+ */
+@property(nonatomic) RCChatSessionInputBarInputType defaultInputType;
+
+/**
+ * 当会话为聊天室时获取的历史信息数目，默认值为10，在viewDidLoad之前设置
+ * -1表示不获取，0表示系统默认数目(现在默认值为10条)，正数表示获取的具体数目，最大值为50
+ */
+@property(nonatomic, assign) int defaultHistoryMessageCountOfChatRoom;
 
 /**
  *  init method
@@ -71,21 +126,20 @@
  *
  *  @return converation
  */
--(id)initWithConversationType:(RCConversationType)conversationType
-                     targetId:(NSString*)targetId;
+- (id)initWithConversationType:(RCConversationType)conversationType targetId:(NSString *)targetId;
 
 /**
  *  设置头像样式,请在viewDidLoad之前调用
  *
  *  @param avatarStyle avatarStyle
  */
--(void)setMessageAvatarStyle:(RCUserAvatarStyle)avatarStyle;
+- (void)setMessageAvatarStyle:(RCUserAvatarStyle)avatarStyle;
 /**
  *  设置头像大小,请在viewDidLoad之前调用
  *
  *  @param size size
  */
--(void)setMessagePortraitSize:(CGSize)size;
+- (void)setMessagePortraitSize:(CGSize)size;
 
 /**
  *  注册消息Cell
@@ -93,11 +147,22 @@
  *  @param cellClass  cellClass
  *  @param identifier identifier
  */
-- (void) registerClass:(Class)cellClass forCellWithReuseIdentifier:(NSString *)identifier;
-
+- (void)registerClass:(Class)cellClass forCellWithReuseIdentifier:(NSString *)identifier;
+/**
+ *  在会话界面删除消息并更新会话界面
+ *
+ *  @param model  被删除消息的model
+ */
+- (void)deleteMessage:(RCMessageModel *)model;
+/**
+*  append消息到datasource中，并显示。可以用在插入提醒消息的场景。
+*
+*  @param message 消息
+*/
+- (void)appendAndDisplayMessage:(RCMessage *)message;
 #pragma mark override
 /**
- *  返回方法，如果继承，请重写该方法，并且优先调用[super leftBarButtonItemPressed:sender];
+ *  返回方法，如果继承，请重写该方法，并且优先调用父类方法;
  *
  *  @param sender 发送者
  */
@@ -112,7 +177,8 @@
  *
  *  @return RCMessageTemplateCell
  */
-- (RCMessageBaseCell *) rcConversationCollectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (RCMessageBaseCell *)rcConversationCollectionView:(UICollectionView *)collectionView
+                             cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 #pragma mark override
 /**
  *  将要显示会话消息，可以修改RCMessageBaseCell的头像形状，添加自定定义的UI修饰
@@ -120,7 +186,7 @@
  *  @param cell      cell
  *  @param indexPath indexPath
  */
-- (void) willDisplayConversationTableCell:(RCMessageBaseCell*)cell atIndexPath:(NSIndexPath *)indexPath;
+- (void)willDisplayConversationTableCell:(RCMessageBaseCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 
 #pragma mark override
 /**
@@ -132,7 +198,9 @@
  *
  *  @return 显示的高度
  */
-- (CGSize) rcConversationCollectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
+- (CGSize)rcConversationCollectionView:(UICollectionView *)collectionView
+                                layout:(UICollectionViewLayout *)collectionViewLayout
+                sizeForItemAtIndexPath:(NSIndexPath *)indexPath;
 
 #pragma mark override
 /**
@@ -140,23 +208,46 @@
  *
  *  @param model 数据
  */
-- (void) didTapMessageCell:(RCMessageModel *)model;
+- (void)didTapMessageCell:(RCMessageModel *)model;
 
+/**
+ *  点击消息内容中的链接，此事件不会再触发didTapMessageCell
+ *
+ *  @param url   Url String
+ *  @param model 数据
+ */
+- (void)didTapUrlInMessageCell:(NSString *)url model:(RCMessageModel *)model;
+
+/**
+ *  点击消息内容中的电话号码，此事件不会再触发didTapMessageCell
+ *
+ *  @param phoneNumber Phone number
+ *  @param model       数据
+ */
+- (void)didTapPhoneNumberInMessageCell:(NSString *)phoneNumber model:(RCMessageModel *)model;
 #pragma mark override
 /**
  *  点击头像事件
  *
  *  @param userId 用户的ID
  */
-- (void) didTapCellPortrait:(NSString*)userId;
+- (void)didTapCellPortrait:(NSString *)userId;
+
+/**
+ *  长按头像事件
+ *
+ *  @param userId 用户的ID
+ */
+- (void)didLongPressCellPortrait:(NSString *)userId;
 
 #pragma mark override
 /**
  *  长按消息内容
  *
  *  @param model 数据
+ *  @param view 长按视图区域
  */
-- (void) didLongTouchMessageCell:(RCMessageModel*)model;
+- (void)didLongTouchMessageCell:(RCMessageModel *)model inView:(UIView *)view;
 
 #pragma mark override
 /**
@@ -164,15 +255,15 @@
  *
  *  @param model 图片消息model
  */
-- (void) presentImagePreviewController:(RCMessageModel*) model;
+- (void)presentImagePreviewController:(RCMessageModel *)model;
 
 #pragma mark override
 /**
  *  打开地理位置。开发者可以重写，自己根据经纬度打开地图显示位置。默认使用内置地图
  *
- *  @param locationMessageCotent 位置消息
+ *  @param locationMessageContent 位置消息
  */
-- (void) presentLocationViewController:(RCLocationMessage*)locationMessageContent;
+- (void)presentLocationViewController:(RCLocationMessage *)locationMessageContent;
 
 #pragma mark override
 /**
@@ -182,7 +273,17 @@
  *
  *  @return 返回消息内容
  */
-- (RCMessageContent*) willSendMessage:(RCMessageContent*)messageCotent;
+- (RCMessageContent *)willSendMessage:(RCMessageContent *)messageCotent;
+
+#pragma mark override
+/**
+ *  重写方法，消息发送之后需要append到datasource中，并显示。在这之前调用，可以修改要显示的消息。
+ *
+ *  @param message 消息
+ *
+ *  @return 返回消息
+ */
+- (RCMessage *)willAppendAndDisplayMessage:(RCMessage *)message;
 
 #pragma mark override
 /**
@@ -191,54 +292,77 @@
  *  @param stauts        0,成功，非0失败
  *  @param messageCotent 消息内容
  */
-- (void) didSendMessage:(NSInteger)stauts content:(RCMessageContent*)messageCotent;
+- (void)didSendMessage:(NSInteger)stauts content:(RCMessageContent *)messageCotent;
 
 /**
  *  发送消息
  *
- *  @param messageCotent 消息
+ *  @param messageContent 消息
  *
  *  @param pushContent push显示内容
  */
--(void)sendMessage:(RCMessageContent*)messageContent
-       pushContent:(NSString*)pushContent;
+- (void)sendMessage:(RCMessageContent *)messageContent pushContent:(NSString *)pushContent;
 
 /**
  *  发送图片消息，此方法会先上传图片到融云指定的图片服务器，在发送消息。
  *
- *  @param messageCotent 消息
+ *  @param imageMessage 消息
  *
  *  @param pushContent push显示内容
  */
--(void)sendImageMessage:(RCImageMessage*)imageMessage
-            pushContent:(NSString*)pushContent;
+- (void)sendImageMessage:(RCImageMessage *)imageMessage pushContent:(NSString *)pushContent;
+
+/**
+ *  重新发送消息。
+ *  消息发送失败后，会有小红点，点击小红点进行重发消息。此时已经删除掉数据库信息和列表信息，重写此函数来发送消息，详情请见demo
+ *
+ *  @param messageContent 消息
+ */
+- (void)resendMessage:(RCMessageContent *)messageContent;
+
+#pragma mark override
+/**
+ *  发送新拍照的图片成功之后，如果需要保存到本地系统，则重写该方法
+ *
+ *  @param newImage 待保存的图片
+ */
+- (void)saveNewPhotoToLocalSystemAfterSendingSuccess:(UIImage *)newImage;
 
 #pragma mark override
 /**
  语音消息开始录音
  */
--(void)onBeginRecordEvent;
+- (void)onBeginRecordEvent;
 
 #pragma mark override
 /**
  语音消息录音结束
  */
--(void)onEndRecordEvent;
+- (void)onEndRecordEvent;
 
 #pragma mark override
 /**
  *  点击pluginBoardView上item响应事件
  *
- *  @param pluginBoardView pluginBoardView
- *  @param index           index
+ *  @param pluginBoardView 功能模板
+ *  @param tag             标记
  */
--(void)pluginBoardView:(RCPluginBoardView*)pluginBoardView clickedItemAtIndex:(NSInteger)index;
+-(void)pluginBoardView:(RCPluginBoardView*)pluginBoardView clickedItemWithTag:(NSInteger)tag;
 #pragma mark override
 /**
  *  重写方法，通知更新未读消息数目，用于导航显示未读消息，当收到别的会话消息的时候，会触发一次。
  */
--(void)notifyUpdateUnReadMessageCount;
-
-
+- (void)notifyUpdateUnreadMessageCount;
+#pragma mark override
+/**
+ *  重写方法，输入框监控方法
+ *
+ *  @param inputTextView inputTextView 输入框
+ *  @param range         range 范围
+ *  @param text          text 文本
+ */
+- (void)inputTextView:(UITextView *)inputTextView
+    shouldChangeTextInRange:(NSRange)range
+            replacementText:(NSString *)text;
 @end
 #endif

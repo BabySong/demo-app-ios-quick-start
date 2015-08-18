@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		461B27851B82DD7D00107001 /* Emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = 461B27831B82DD7D00107001 /* Emoji.plist */; };
+		461B27861B82DD7D00107001 /* RongCloud.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 461B27841B82DD7D00107001 /* RongCloud.bundle */; };
+		461B27891B82DDA000107001 /* RongCloudKit.strings in Resources */ = {isa = PBXBuildFile; fileRef = 461B27871B82DDA000107001 /* RongCloudKit.strings */; };
 		46973E091AE698CA007BE79E /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46973E081AE698C9007BE79E /* AssetsLibrary.framework */; };
 		4698CBA21AE22FCA0006330E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4698CBA11AE22FCA0006330E /* main.m */; };
 		4698CBA51AE22FCA0006330E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4698CBA41AE22FCA0006330E /* AppDelegate.m */; };
@@ -15,7 +18,6 @@
 		4698CBAD1AE22FCA0006330E /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4698CBAC1AE22FCA0006330E /* Images.xcassets */; };
 		4698CBB01AE22FCA0006330E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4698CBAE1AE22FCA0006330E /* LaunchScreen.xib */; };
 		4698CBBC1AE22FCA0006330E /* RongCloudDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4698CBBB1AE22FCA0006330E /* RongCloudDemoTests.m */; };
-		4698CBC81AE2305C0006330E /* RongCloud.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4698CBC71AE2305C0006330E /* RongCloud.bundle */; };
 		4698CBD11AE233D60006330E /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4698CBD01AE233D60006330E /* ImageIO.framework */; };
 		4698CBD31AE233DE0006330E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4698CBD21AE233DE0006330E /* libz.dylib */; };
 		4698CBD51AE233EB0006330E /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4698CBD41AE233EB0006330E /* libxml2.dylib */; };
@@ -51,6 +53,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		461B27831B82DD7D00107001 /* Emoji.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Emoji.plist; path = framework/Emoji.plist; sourceTree = "<group>"; };
+		461B27841B82DD7D00107001 /* RongCloud.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = RongCloud.bundle; path = framework/RongCloud.bundle; sourceTree = "<group>"; };
+		461B27881B82DDA000107001 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = framework/en.lproj/RongCloudKit.strings; sourceTree = SOURCE_ROOT; };
+		461B278A1B82DDAE00107001 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "framework/zh-Hans.lproj/RongCloudKit.strings"; sourceTree = SOURCE_ROOT; };
 		46973E081AE698C9007BE79E /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		4698CB9C1AE22FCA0006330E /* RongCloudDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RongCloudDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4698CBA01AE22FCA0006330E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -65,7 +71,6 @@
 		4698CBB51AE22FCA0006330E /* RongCloudDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RongCloudDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4698CBBA1AE22FCA0006330E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4698CBBB1AE22FCA0006330E /* RongCloudDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RongCloudDemoTests.m; sourceTree = "<group>"; };
-		4698CBC71AE2305C0006330E /* RongCloud.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = RongCloud.bundle; path = RongCloudDemo/RongCloud.bundle; sourceTree = "<group>"; };
 		4698CBD01AE233D60006330E /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		4698CBD21AE233DE0006330E /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		4698CBD41AE233EB0006330E /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
@@ -134,6 +139,8 @@
 		4698CB931AE22FCA0006330E = {
 			isa = PBXGroup;
 			children = (
+				461B27831B82DD7D00107001 /* Emoji.plist */,
+				461B27841B82DD7D00107001 /* RongCloud.bundle */,
 				4698CBCD1AE232FF0006330E /* Frameworks */,
 				4698CBC91AE230600006330E /* Resouce */,
 				4698CB9E1AE22FCA0006330E /* RongCloudDemo */,
@@ -171,6 +178,7 @@
 		4698CB9F1AE22FCA0006330E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				461B27871B82DDA000107001 /* RongCloudKit.strings */,
 				4698CBA01AE22FCA0006330E /* Info.plist */,
 				4698CBA11AE22FCA0006330E /* main.m */,
 			);
@@ -197,7 +205,6 @@
 		4698CBC91AE230600006330E /* Resouce */ = {
 			isa = PBXGroup;
 			children = (
-				4698CBC71AE2305C0006330E /* RongCloud.bundle */,
 			);
 			name = Resouce;
 			sourceTree = "<group>";
@@ -294,6 +301,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 4698CB931AE22FCA0006330E;
 			productRefGroup = 4698CB9D1AE22FCA0006330E /* Products */;
@@ -311,8 +319,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				461B27851B82DD7D00107001 /* Emoji.plist in Resources */,
+				461B27861B82DD7D00107001 /* RongCloud.bundle in Resources */,
 				4698CBAB1AE22FCA0006330E /* Main.storyboard in Resources */,
-				4698CBC81AE2305C0006330E /* RongCloud.bundle in Resources */,
+				461B27891B82DDA000107001 /* RongCloudKit.strings in Resources */,
 				4698CBB01AE22FCA0006330E /* LaunchScreen.xib in Resources */,
 				4698CBAD1AE22FCA0006330E /* Images.xcassets in Resources */,
 			);
@@ -358,6 +368,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		461B27871B82DDA000107001 /* RongCloudKit.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				461B27881B82DDA000107001 /* en */,
+				461B278A1B82DDAE00107001 /* zh-Hans */,
+			);
+			name = RongCloudKit.strings;
+			sourceTree = "<group>";
+		};
 		4698CBA91AE22FCA0006330E /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

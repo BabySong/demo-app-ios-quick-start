@@ -14,27 +14,25 @@
 /**
  *  RCConversationModelType
  */
-typedef NS_ENUM(NSUInteger, RCConversationModelType)
-{
+typedef NS_ENUM(NSUInteger, RCConversationModelType) {
     /**
-     *  ConversationModelType_Normal
+     *  RC_CONVERSATION_MODEL_TYPE_NORMAL
      */
-    ConversationModelType_Normal = 1,
+    RC_CONVERSATION_MODEL_TYPE_NORMAL = 1,
     /**
-     *  ConversationModelType_Collection
+     *  RC_CONVERSATION_MODEL_TYPE_COLLECTION
      */
-    ConversationModelType_Collection =2,
+    RC_CONVERSATION_MODEL_TYPE_COLLECTION = 2,
     /**
-     *  ConversationModelType_UserCustom
+     *  RC_CONVERSATION_MODEL_TYPE_CUSTOMIZATION
      */
-    ConversationModelType_UserCustom = 3,
+    RC_CONVERSATION_MODEL_TYPE_CUSTOMIZATION = 3,
     /**
-     *  ConversationModelType_PublicService
+     *  RC_CONVERSATION_MODEL_TYPE_PUBLIC_SERVICE
      */
-    ConversationModelType_PublicService = 4,
+    RC_CONVERSATION_MODEL_TYPE_PUBLIC_SERVICE = 4,
 
 };
-
 
 /**
  *  RCConversationModel
@@ -44,11 +42,12 @@ typedef NS_ENUM(NSUInteger, RCConversationModelType)
 /**
  *  conversationModelType
  */
-@property (nonatomic ) RCConversationModelType conversationModelType;
+@property(nonatomic) RCConversationModelType conversationModelType;
 
-//用户自定义数据
-@property (nonatomic,strong) id extend;
-
+/**
+ *  用户自定义数据
+ */
+@property(nonatomic, strong) id extend;
 
 /*!
  会话类型 @see RCConversationType
@@ -57,11 +56,11 @@ typedef NS_ENUM(NSUInteger, RCConversationModelType)
 /*!
  会话 Id
  */
-@property(nonatomic, strong) NSString* targetId;
+@property(nonatomic, strong) NSString *targetId;
 /*!
  会话名称
  */
-@property(nonatomic, strong) NSString* conversationTitle;
+@property(nonatomic, strong) NSString *conversationTitle;
 /*!
  会话中未读消息数
  */
@@ -89,19 +88,19 @@ typedef NS_ENUM(NSUInteger, RCConversationModelType)
 /*!
  消息草稿，尚未发送的消息内容
  */
-@property(nonatomic, strong) NSString* draft;
+@property(nonatomic, strong) NSString *draft;
 /*!
  会话实体名
  */
-@property(nonatomic, strong) NSString* objectName;
+@property(nonatomic, strong) NSString *objectName;
 /*!
  发送消息用户Id
  */
-@property(nonatomic, strong) NSString* senderUserId;
+@property(nonatomic, strong) NSString *senderUserId;
 /*!
  发送消息用户名
  */
-@property(nonatomic, strong) NSString* senderUserName;
+@property(nonatomic, strong) NSString *senderUserName;
 /*!
  当前会话最近一条消息Id
  */
@@ -109,7 +108,7 @@ typedef NS_ENUM(NSUInteger, RCConversationModelType)
 /*!
  当前会话最近一条消息实体
  */
-@property(nonatomic, strong) RCMessageContent* lastestMessage;
+@property(nonatomic, strong) RCMessageContent *lastestMessage;
 /**
  *  会话的json数据
  */
@@ -123,7 +122,7 @@ typedef NS_ENUM(NSUInteger, RCConversationModelType)
  *
  *  @return model
  */
--(id)init:(RCConversationModelType)conversationModelType exntend:(id)extend;
+- (id)init:(RCConversationModelType)conversationModelType exntend:(id)extend;
 
 /**
  *  SDK本身使用的初始化方法
@@ -134,12 +133,7 @@ typedef NS_ENUM(NSUInteger, RCConversationModelType)
  *
  *  @return model
  */
--(id)init:(RCConversationModelType)conversationModelType
-conversation:(RCConversation*)conversation
-   extend:(id)extend;
-
-
-
+- (id)init:(RCConversationModelType)conversationModelType conversation:(RCConversation *)conversation extend:(id)extend;
 
 @end
 
