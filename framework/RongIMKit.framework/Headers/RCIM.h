@@ -32,19 +32,37 @@ FOUNDATION_EXPORT NSString
                    completion:(void (^)(RCUserInfo *userInfo))completion;
 @end
 /**
- *  获取群主信息。
+ *  获取群组信息。
  */
 @protocol RCIMGroupInfoDataSource <NSObject>
 
 /**
- *  获取群主信息。
+ *  获取群组信息。
  *
- *  @param groupId  群主ID.
+ *  @param groupId  群组ID.
  *  @param completion 获取完成调用的BLOCK.
  */
 
 - (void)getGroupInfoWithGroupId:(NSString *)groupId
                      completion:(void (^)(RCGroup *groupInfo))completion;
+
+@end
+
+/**
+ *  获取用户在群组中的用户信息。可用于实现群名片功能.
+ */
+@protocol RCIMGroupUserInfoDataSource <NSObject>
+
+/**
+ *  获取用户在群组中的用户信息。
+ *  如果该用户在该群组中没有设置群名片，请注意：1，不要调用别的接口返回全局用户信息，直接回调给我们nil就行，SDK会自己调用普通用户信息提供者获取用户信息；2一定要调用completion(nil)，这样SDK才能继续往下操作。
+ *
+ *  @param userId     用户 Id。
+ *  @param groupId  群组ID.
+ *  @param completion 获取完成调用的BLOCK.
+ */
+- (void)getUserInfoWithUserId:(NSString *)userId inGroup:(NSString *)groupId
+                     completion:(void (^)(RCUserInfo *userInfo))completion;
 
 @end
 
@@ -109,6 +127,11 @@ FOUNDATION_EXPORT NSString
  *   导航按钮字体颜色
  */
 @property(nonatomic) UIColor *globalNavigationBarTintColor;
+
+/**
+ *   头像边角，只有在头像样式为矩形时有效（矩形样式即默认样式）
+ */
+@property(nonatomic) CGFloat portraitImageViewCornerRadius;
 /**
  *  默认45*45，高度最小只能为36
  */
@@ -137,6 +160,10 @@ FOUNDATION_EXPORT NSString
  *  群组信息提供者
  */
 @property(nonatomic, weak) id<RCIMGroupInfoDataSource> groupInfoDataSource;
+/**
+ *  群组内用户信息提供者。可用于群名片等功能
+ */
+@property(nonatomic, weak) id<RCIMGroupUserInfoDataSource> groupUserInfoDataSource;
 /**
  * 接收消息的监听器。如果使用IMKit，使用此方法，不再使用RongIMLib的同名方法。
  */
@@ -195,7 +222,7 @@ FOUNDATION_EXPORT NSString
 /**
  *  断开连接。如果使用IMKit，使用此方法，不再使用RongIMLib的同名方法。
  *
- *  @param isReceivePush 是否接收回调。
+ *  @param isReceivePush 是否接收push消息。
  */
 - (void)disconnect:(BOOL)isReceivePush;
 
@@ -231,6 +258,13 @@ FOUNDATION_EXPORT NSString
 - (void)refreshGroupInfoCache:(RCGroup *)groupInfo
                  withGroupId:(NSString *)groupId;
 
+/**
+ * 本地群组内用户信息改变，调用此方法更新kit层群组缓存信息
+ * @param userInfo 要更新的用户实体
+  * @param userId  要更新的用户Id
+ * @param groupId  要更新的群组Id
+ */
+- (void)refreshGroupUserInfoCache:(RCUserInfo *)userInfo withUserId:(NSString *)userId withGroupId:(NSString *)groupId;
 /**
  *  清除所有本地用户信息的缓存。
  */

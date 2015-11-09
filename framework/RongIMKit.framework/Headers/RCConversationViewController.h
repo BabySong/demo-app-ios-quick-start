@@ -46,15 +46,19 @@
  */
 @property(nonatomic, strong) UIButton *unReadButton;
 /**
- *  conversationType
+ *  未读消息label，开发者可以按照需求修改未读消息数的显示
+ */
+@property(nonatomic,strong) UILabel *unReadMessageLabel;
+/**
+ *  会话类型
  */
 @property(nonatomic) RCConversationType conversationType;
 /**
- *  conversationMessageCollectionView
+ *  展示会话的CollectionView控件，可以修改这个控件的属性比如背景
  */
 @property(nonatomic, strong) UICollectionView *conversationMessageCollectionView;
 /**
- *  conversationDataRepository
+ *  会话数据存储数组
  */
 @property(nonatomic, strong) NSMutableArray *conversationDataRepository;
 /**
@@ -88,6 +92,11 @@
  *  默认No,如果Yes, 当消息不在最下方时显示 右下角新消息数图标
  */
 @property(nonatomic, assign) BOOL enableNewComingMessageIcon;
+
+/**
+ *  是否开启语音消息连读，设置为Yes，播放语音消息时 会连续播放下面所有收到的未读语音消息
+ */
+@property(nonatomic, assign) BOOL enableContinuousReadUnreadVoice;
 
 /**
  * 是否允许保存新拍照片到本地系统
@@ -160,6 +169,12 @@
 *  @param message 消息
 */
 - (void)appendAndDisplayMessage:(RCMessage *)message;
+/**
+ *  滚动到list的最底部
+ *
+ *  @param animated 是否动画
+ */
+- (void)scrollToBottomAnimated:(BOOL)animated;
 #pragma mark override
 /**
  *  返回方法，如果继承，请重写该方法，并且优先调用父类方法;
@@ -181,7 +196,7 @@
                              cellForItemAtIndexPath:(NSIndexPath *)indexPath;
 #pragma mark override
 /**
- *  将要显示会话消息，可以修改RCMessageBaseCell的头像形状，添加自定定义的UI修饰
+ *  将要显示会话消息，可以修改RCMessageBaseCell的头像形状，添加自定定义的UI修饰，建议不要修改里面label 文字的大小，cell 大小是根据文字来计算的，如果修改大小可能造成cell 显示出现问题
  *
  *  @param cell      cell
  *  @param indexPath indexPath
@@ -304,7 +319,7 @@
 - (void)sendMessage:(RCMessageContent *)messageContent pushContent:(NSString *)pushContent;
 
 /**
- *  发送图片消息，此方法会先上传图片到融云指定的图片服务器，在发送消息。
+ *  发送图片消息，此方法会先上传图片到融云指定的图片服务器，再发送消息。
  *
  *  @param imageMessage 消息
  *
@@ -320,6 +335,27 @@
  */
 - (void)resendMessage:(RCMessageContent *)messageContent;
 
+/**
+ *  上传图片到应用的图片服务器。
+ *  当应用使用非融云的图片服务器时，请调用sendImageMessage:pushContent:appUpload:这个接口发送图片消息，appUpload设置为YES。融云会自动调用到本函数进行图片上传。
+ *  应用需要overwrite此函数，在这个函数里上传并把进度和结果告诉融云，融云用来更新UI和发送消息。
+ *
+ *  @param message        保持下来的图片消息
+ *
+ *  @param uploadListener 上传状态回调。请务必在恰当的时机调用updateBlock和successBlock来通知融云状态
+ */
+- (void)uploadImage:(RCMessage *)message uploadListener:(RCUploadImageStatusListener *)uploadListener;
+
+/**
+ *  发送图片消息，
+ *
+ *  @param imageMessage 图片消息
+ *
+ *  @param pushContent push显示内容
+ *
+ *  @param appUpload  为NO上传图片到融云指定的图片服务器。为YES时融云会回调uploadImage:uploadListener:函数，请务必实现该方法，并在该方法中上传图片，然后通过uploadListener通知融云上传进度和结果。
+ */
+- (void)sendImageMessage:(RCImageMessage *)imageMessage pushContent:(NSString *)pushContent appUpload:(BOOL)appUpload;
 #pragma mark override
 /**
  *  发送新拍照的图片成功之后，如果需要保存到本地系统，则重写该方法

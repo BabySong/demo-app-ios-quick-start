@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		461708781BF03D9C0081819C /* libopencore-amrnb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 461708771BF03D9C0081819C /* libopencore-amrnb.a */; };
 		461B27851B82DD7D00107001 /* Emoji.plist in Resources */ = {isa = PBXBuildFile; fileRef = 461B27831B82DD7D00107001 /* Emoji.plist */; };
 		461B27861B82DD7D00107001 /* RongCloud.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 461B27841B82DD7D00107001 /* RongCloud.bundle */; };
 		461B27891B82DDA000107001 /* RongCloudKit.strings in Resources */ = {isa = PBXBuildFile; fileRef = 461B27871B82DDA000107001 /* RongCloudKit.strings */; };
@@ -53,6 +54,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		461708771BF03D9C0081819C /* libopencore-amrnb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libopencore-amrnb.a"; path = "framework/libopencore-amrnb.a"; sourceTree = "<group>"; };
 		461B27831B82DD7D00107001 /* Emoji.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Emoji.plist; path = framework/Emoji.plist; sourceTree = "<group>"; };
 		461B27841B82DD7D00107001 /* RongCloud.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = RongCloud.bundle; path = framework/RongCloud.bundle; sourceTree = "<group>"; };
 		461B27881B82DDA000107001 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = framework/en.lproj/RongCloudKit.strings; sourceTree = SOURCE_ROOT; };
@@ -113,6 +115,7 @@
 				4698CBE51AE234610006330E /* CoreVideo.framework in Frameworks */,
 				4698CBE31AE234560006330E /* libc++.dylib in Frameworks */,
 				4698CBFD1AE237AB0006330E /* RongIMLib.framework in Frameworks */,
+				461708781BF03D9C0081819C /* libopencore-amrnb.a in Frameworks */,
 				4698CBE11AE2344D0006330E /* libsqlite3.dylib in Frameworks */,
 				4698CBDF1AE234420006330E /* libstdc++.dylib in Frameworks */,
 				4698CBDD1AE234300006330E /* OpenGLES.framework in Frameworks */,
@@ -212,6 +215,7 @@
 		4698CBCD1AE232FF0006330E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				461708771BF03D9C0081819C /* libopencore-amrnb.a */,
 				46973E081AE698C9007BE79E /* AssetsLibrary.framework */,
 				4698CBFC1AE237AB0006330E /* RongIMLib.framework */,
 				4698CBFA1AE236EA0006330E /* RongIMKit.framework */,
@@ -476,6 +480,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/RongCloudDemo",
@@ -483,7 +488,12 @@
 					"$(PROJECT_DIR)/framework",
 				);
 				INFOPLIST_FILE = RongCloudDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/framework",
+				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -493,6 +503,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/RongCloudDemo",
@@ -500,7 +511,12 @@
 					"$(PROJECT_DIR)/framework",
 				);
 				INFOPLIST_FILE = RongCloudDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/framework",
+				);
 				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

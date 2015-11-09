@@ -74,6 +74,11 @@
 @property(nonatomic) BOOL enableNotification;
 
 /**
+ *  会话有新消息通知的时候显示数字提醒，设置为NO,不显示数字只显示红点，默认是YES ,您可以在会话列表willDisplayConversationTableCell 方法里修改这个属性
+ */
+@property(nonatomic) BOOL isShowNotificationNumber;
+
+/**
  *  cell 背景颜色
  */
 @property(nonatomic) UIColor *cellBackgroundColor;
@@ -84,9 +89,14 @@
 @property(nonatomic) UIColor *topCellBackgroundColor;
 
 /**
+ *  最后一条消息发送状态
+ */
+@property(strong, nonatomic) UILabel *lastSendMessageStatusLabel;
+
+/**
  *  设置用户头像样式
  *
- *  @param portraitStyle portraitStyle
+ *  @param portraitStyle 用户头像样式
  */
 - (void)setHeaderImagePortraitStyle:(RCUserAvatarStyle)portraitStyle;
 

@@ -51,8 +51,9 @@
  */
 @property(nonatomic, assign) BOOL isShowNetworkIndicatorView;
 
+
 /**
- *  会话列表为空时的视图
+ *  会话列表为空时的背景视图
  */
 @property(nonatomic, strong) UIView *emptyConversationView;
 
@@ -84,8 +85,8 @@
 /**
  *  init
  *
- *  @param conversationTypeArray1 会话类型，NSNumber类型。
- *  @param conversationTypeArray2 会话类型，NSNumber类型。
+ *  @param conversationTypeArray1 需要显示的会话类型，NSNumber类型。
+ *  @param conversationTypeArray2 需要聚合显示的会话类型，NSNumber类型。
  *
  *  @return conversationList
  */
@@ -124,7 +125,9 @@
 - (void)refreshConversationTableViewIfNeeded;
 
 /**
- *  重新设置空会话列表背景图
+ *  移除默认的空会话列表背景图
+ *
+ *  该接口已经废弃，在会话为空时 SDK 会自动显示emptyConversationView，app不需要进行处理
  */
 - (void)resetConversationListBackgroundViewIfNeeded;
 
@@ -236,9 +239,5 @@
  */
 - (void)notifyUpdateUnreadMessageCount;
 
-/**
- *  重写方法，设置会话列表emptyConversationView的视图。
- */
-- (void)showEmptyConversationView;
 @end
 #endif

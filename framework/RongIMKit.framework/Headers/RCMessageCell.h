@@ -24,10 +24,6 @@
  */
 @interface RCMessageCell : RCMessageBaseCell
 
-/**
- *  消息回调
- */
-@property(nonatomic, weak) id<RCMessageCellDelegate> delegate;
 
 /**
  *  用户头像
@@ -73,6 +69,18 @@
  *  是否显示用户昵称
  */
 @property(nonatomic, readonly) BOOL isDisplayNickname;
+
+/**
+ *  消息已读状态视图
+ */
+@property(nonatomic, strong) UIView *messageHasReadStatusView;
+
+/**
+ *  消息发送成功状态视图
+ */
+@property(nonatomic, strong) UIView *messageSendSuccessStatusView;
+
+
 
 /**
  *  设置数据模型

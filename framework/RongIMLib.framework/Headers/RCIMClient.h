@@ -21,6 +21,8 @@
 #import "RCPublicServiceProfile.h"
 #import "RCUserData.h"
 #import "RCWatchKitStatusDelegate.h"
+#import "RCUploadImageStatusListener.h"
+#import "RCPublicServiceDataSource.h"
 
 @class RCConversation;
 @class RCDiscussion;
@@ -107,6 +109,11 @@ typedef NS_ENUM(NSUInteger, RCNetworkStatus) {
  *  当前的用户信息对象
  */
 @property(nonatomic, strong) RCUserInfo *currentUserInfo;
+
+/**
+ *  公众服务信息提供者
+ */
+@property(nonatomic, strong)id<RCPublicServiceDataSource> publicServiceDataSource;
 
 /**
  *  当前 App 前后台模式
@@ -318,6 +325,31 @@ sendImageMessage:(RCConversationType)conversationType
         progress:(void (^)(int progress, long messageId))progressBlock
          success:(void (^)(long messageId))successBlock
            error:(void (^)(RCErrorCode errorCode, long messageId))errorBlock;
+
+/**
+ *  发送图片消息，由APP实现上传图片。请在uploadPrepareBlock中上传图片，并通知融云上传进度和结果。使用lib的客户可以忽略此方法
+ *
+ *  @param conversationType   会话类型。
+ *  @param targetId           目标 Id。根据不同的 conversationType，可能是聊天 Id、讨论组 Id、群组 Id 或聊天室 Id。
+ *  @param content            消息内容
+ *  @param pushContent        推送消息内容
+ *  @param pushData         推送消息附加信息
+ *  @param uploadPrepareBlock 应用上传图片Block
+ *  @param progressBlock      进度块
+ *  @param successBlock       成功处理块
+ *  @param errorBlock         失败处理块
+ *
+ *  @return 发送的消息实体。
+ */
+- (RCMessage *)sendImageMessage:(RCConversationType)conversationType
+                       targetId:(NSString *)targetId
+                        content:(RCMessageContent *)content
+                    pushContent:(NSString *)pushContent
+                       pushData:(NSString *)pushData
+                  uploadPrepare:(void (^)(RCUploadImageStatusListener *uploadListener))uploadPrepareBlock
+                       progress:(void (^)(int progress, long messageId))progressBlock
+                        success:(void (^)(long messageId))successBlock
+                          error:(void (^)(RCErrorCode errorCode, long messageId))errorBlock;
 /**
  *  下载图片
  *
@@ -528,6 +560,16 @@ sendImageMessage:(RCConversationType)conversationType
  */
 - (BOOL)setMessageReceivedStatus:(long)messageId
                   receivedStatus:(RCReceivedStatus)receivedStatus;
+
+
+/**
+ *  设置消息发送状态。
+ *
+ *  @param messageId      消息 Id。
+ *  @param sentStatus 接收到的消息状态。
+ */
+- (BOOL)setMessageSentStatus:(long)messageId
+                  sentStatus:(RCSentStatus)sentStatus;
 
 /**
  *  获取某一会话的文字消息草稿。
@@ -895,6 +937,19 @@ setConversationNotificationStatus:(RCConversationType)conversationType
                                 (RCPublicServiceType)publicServiceType
                                     publicServiceId:(NSString *)publicServiceId;
 
+
+/**
+ *  获取公众号信息
+ *
+ *  @param targetId  目标 Id
+ *  @param type    会话类型
+ *  @param onSuccess       获取成功：返回RCPublicServiceProfile的数据
+ *  @param onError         获取失败：返回错误码
+ */
+- (void)getPublicServiceProfile:(NSString *)targetId
+               conversationType:(RCConversationType)type
+                      onSuccess:(void (^)(RCPublicServiceProfile *serviceProfile))onSuccess
+                        onError:(void (^)(NSError *error))onError;
 /**
  *  查询已关注的公众号
  *
@@ -913,16 +968,6 @@ setConversationNotificationStatus:(RCConversationType)conversationType
 - (UIViewController *)getPublicServiceWebViewController:(NSString *)URLString;
 
 /**
- *  同步用户信息
- *
- *  @param userData          用户信息
- *  @param successBlock 成功回调
- *  @param errorBlock   失败回调
- */
-- (void)syncUserData:(RCUserData *)userData
-             success:(void (^)())successBlock
-               error:(void (^)(RCErrorCode status))errorBlock;
-/**
  *  查询当前连接状态
  *
  *  @return 连接状态
@@ -938,13 +983,14 @@ setConversationNotificationStatus:(RCConversationType)conversationType
  *  @param recordTime  最早消息的 sendtime，第一次取传0。
  *  @param count            要获取的消息数量（1-20条）。
  *  @param successBlock 成功回调返回历史记录
- *  @return 。
+ *  @param errorBlock         获取失败：返回错误码
  */
 - (void)getRemoteHistoryMessages:(RCConversationType)conversationType
                   targetId:(NSString *)targetId
                 recordTime:(long)recordTime
                      count:(int)count
-                   success:(void (^)(NSArray *messages))successBlock;
+                   success:(void (^)(NSArray *messages))successBlock
+                     error:(void (^)(RCErrorCode status))errorBlock;
 
 /**
  *  发起客服会话（kit中会话页面已经有客服会话的判断，不用调用此消息，如果用使用Lib 在发起客服会话时调用，这里会发送握手消息）
@@ -969,7 +1015,187 @@ setConversationNotificationStatus:(RCConversationType)conversationType
                           error:(void (^)(RCErrorCode status))errorBlock;
 
 
+#pragma mark - 统计API
+/**
+ *  统计启动事件
+ *
+ *  @param launchOptions    启动原因
+ */
+- (void)recordLaunchOptionsEvent:(NSDictionary *)launchOptions;
+
+/**
+ *  统计本地推送事件
+ *
+ *  @param notification     本地推送内容
+ */
+- (void)recordLocalNotificationEvent:(UILocalNotification *)notification;
+
+/**
+ *  统计远程推送事件
+ *
+ *  @param userInfo     远程推送内容
+ */
+- (void)recordRemoteNotificationEvent:(NSDictionary *)userInfo;
+
+/**
+ *  获取点击的启动事件中，融云推送服务的扩展字段
+ *
+ *  @param launchOptions    启动原因
+ *
+ *  @return                 收到的融云推送服务的扩展字段，nil表示该启动事件不包含来自融云的推送服务
+ */
+- (NSDictionary *)getPushExtraFromLaunchOptions:(NSDictionary *)launchOptions;
+
+/**
+ *  获取点击的远程推送中，融云推送服务的扩展字段
+ *
+ *  @param userInfo     远程推送内容
+ *
+ *  @return             收到的融云推送服务的扩展字段，nil表示该远程推送不包含来自融云的推送服务
+ */
+- (NSDictionary *)getPushExtraFromRemoteNotification:(NSDictionary *)userInfo;
+
+/**
+ *  统计事件
+ *
+ *  @param key      事件名
+ *  @param count    计数
+ */
+- (void)recordEvent:(NSString *)key count:(int)count;
+
+/**
+ *  统计事件
+ *
+ *  @param key      事件名
+ *  @param count    计数
+ *  @param sum      权重
+ */
+- (void)recordEvent:(NSString *)key count:(int)count sum:(double)sum;
+
+/**
+ *  统计事件
+ *
+ *  @param key              事件名
+ *  @param segmentation     事件详情
+ *  @param count            计数
+ */
+- (void)recordEvent:(NSString *)key segmentation:(NSDictionary *)segmentation count:(int)count;
+
+/**
+ *  统计事件
+ *
+ *  @param key              事件名
+ *  @param segmentation     事件详情
+ *  @param count            计数
+ *  @param sum              权重
+ */
+- (void)recordEvent:(NSString *)key segmentation:(NSDictionary *)segmentation count:(int)count sum:(double)sum;
+
+/**
+ *  统计地址位置
+ *
+ *  @param latitude     纬度
+ *  @param longitude    经度
+ */
+- (void)recordLocation:(double)latitude longitude:(double)longitude;
+
+/**
+ *  统计用户信息
+ *
+ *  @param userDetails  用户信息
+ */
+- (void)recordUserDetails:(NSDictionary *)userDetails;
+
+/**
+ *  用户信息Key值，昵称
+ */
+extern NSString* const kRCUserName;
+/**
+ *  用户信息Key值，邮箱
+ */
+extern NSString* const kRCUserEmail;
+/**
+ *  用户信息Key值，公司
+ */
+extern NSString* const kRCUserOrganization;
+/**
+ *  用户信息Key值，手机号
+ */
+extern NSString* const kRCUserPhone;
+/**
+ *  用户信息Key值，性别
+ */
+extern NSString* const kRCUserGender;
+/**
+ *  用户信息Key值，头像
+ */
+extern NSString* const kRCUserPicture;
+/**
+ *  用户信息Key值，头像地址
+ */
+extern NSString* const kRCUserPicturePath;
+/**
+ *  用户信息Key值，出生日期
+ */
+extern NSString* const kRCUserBirthYear;
+/**
+ *  用户信息Key值，用户自定义信息
+ *
+ *  @param name       名称
+ *  @param data       信息内容
+ *  @param successBlock     成功后处理方法
+ *  @param errorBlock       失败后处理方法
+ */
+
+extern NSString* const kRCUserCustom;
+- (void)uploadUserInfoWithName:(NSString *)name
+                          data:(NSString *)data
+                       success:(void (^)(NSString *token))successBlock
+                         error:(void (^)(RCErrorCode status, NSString *errorMsg))errorBlock;
+
+/**
+ *  获取消息发送成功时间
+ *
+ *  @param messageId       消息的Id
+ */
+-(long long)getMessageSendTime:(long)messageId;
 
 
+/**
+ *  获取消息回执功能开通状态
+ *  @param conversationType       会话类型（目前只支持单聊）
+ */
+-(BOOL)getConversationMessageReceiptStatus:(RCConversationType)conversationType;
+
+/**
+ *  发送已读消息回执
+ *
+ *  @param conversationType       会话类型（目前只支持单聊）
+ *  @param targetId               会话Id
+ *  @param timestamp                   最后一条发送消息的时间戳
+ */
+-(void)sendReceiptMessage:(RCConversationType)conversationType
+                 targetId:(NSString *)targetId
+                     time: (long long)timestamp;
+
+/**
+ *  AMR-NB转换成WAVE格式的音频.
+ *
+ *  @param data AMR格式数据
+ *
+ *  @return WAVE格式数据
+ */
+- (NSData *)dcodeAMRToWAVE:(NSData *)data;
+
+/**
+ *  WAVE转换成AMR-NB格式音频
+ *
+ *  @param data           WAVE格式数据 注意声音的采样率  AVNumberOfChannelsKey=1 AVLinearPCMBitDepthKey=16
+ *  @param nChannels      默认传入1。
+ *  @param nBitsPerSample 默认传入16。
+ *
+ *  @return AMR格式数据
+ */
+- (NSData *)ecodeWAVEToAMR:(NSData *)data channel:(int)nChannels nBitsPerSample:(int)nBitsPerSample;
 @end
 #endif
